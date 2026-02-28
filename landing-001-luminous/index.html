@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Luminous — AI Product Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-card: #12121a;
+      --primary: #6366f1;
+      --primary-glow: #818cf8;
+      --accent: #22d3ee;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #1e293b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Background Effects */
+    .bg-grid {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-glow {
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.4;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-1 {
+      top: -200px;
+      left: -200px;
+      background: var(--primary);
+    }
+
+    .glow-2 {
+      bottom: -200px;
+      right: -200px;
+      background: var(--accent);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary-glow), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-left: 32px;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    /* Hero */
+    .hero {
+      padding: 120px 0 80px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      border-radius: 100px;
+      font-size: 0.85rem;
+      color: var(--primary-glow);
+      margin-bottom: 32px;
+    }
+
+    .badge span {
+      width: 8px;
+      height: 8px;
+      background: var(--primary-glow);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    h1 .gradient {
+      background: linear-gradient(135deg, var(--primary-glow), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 48px;
+    }
+
+    /* Buttons */
+    .buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-glow));
+      color: white;
+      box-shadow: 0 4px 24px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(99, 102, 241, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--primary);
+    }
+
+    /* Preview */
+    .preview {
+      margin-top: 80px;
+      position: relative;
+    }
+
+    .preview-window {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    }
+
+    .preview-header {
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+
+    .preview-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot-red { background: #ef4444; }
+    .dot-yellow { background: #eab308; }
+    .dot-green { background: #22c55e; }
+
+    .preview-content {
+      padding: 40px;
+      min-height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Demo UI */
+    .demo-card {
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      border-radius: 16px;
+      padding: 32px;
+      text-align: center;
+      max-width: 400px;
+    }
+
+    .demo-icon {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+      font-size: 2rem;
+    }
+
+    .demo-input {
+      width: 100%;
+      padding: 16px;
+      background: var(--bg);
+      border: var(--border);
+ 1px solid 12      border-radius:px;
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 16px;
+    }
+
+    .demo-result {
+      padding: 16px;
+      background: rgba(34, 211, 238, 0.1);
+      border-radius: 12px;
+      color: var(--accent);
+      font-size: 0.9rem;
+    }
+
+    /* Features */
+    .features {
+      padding: 120px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .section-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Pricing */
+    .pricing {
+      padding: 80px 0 120px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--primary);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .pricing-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      margin: 24px 0;
+    }
+
+    .price span {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .pricing-card ul {
+      list-style: none;
+      text-align: left;
+      margin: 24px 0;
+    }
+
+    .pricing-card li {
+      padding: 8px 0;
+      color: var(--text-muted);
+    }
+
+    .pricing-card li::before {
+      content: "✓";
+      color: var(--accent);
+      margin-right: 12px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 48px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .float {
+      animation: float 6s ease-in-out infinite;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      nav { display: none; }
+      h1 { font-size: 2rem; }
+      .hero { padding: 80px 0 60px; }
+      .preview-content { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-grid"></div>
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+
+  <div class="container">
+    <header>
+      <div class="logo">Luminous</div>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="badge">
+        <span></span>
+        AI-Powered Product Generator
+      </div>
+      
+      <h1>Create Stunning Products<br><span class="gradient">In Seconds</span></h1>
+      
+      <p>Transform your ideas into beautiful product images, descriptions, and listings for e-commerce. Powered by advanced AI.</p>
+      
+      <div class="buttons">
+        <a href="#" class="btn btn-primary">Get Started Free</a>
+        <a href="#" class="btn btn-secondary">View Demo</a>
+      </div>
+
+      <div class="preview">
+        <div class="preview-window">
+          <div class="preview-header">
+            <div class="preview-dot dot-red"></div>
+            <div class="preview-dot dot-yellow"></div>
+            <div class="preview-dot dot-green"></div>
+          </div>
+          <div class="preview-content">
+            <div class="demo-card float">
+              <div class="demo-icon">✨</div>
+              <input type="text" class="demo-input" placeholder="Describe your product..." value="Handmade ceramic vase with blue patterns">
+              <div class="demo-result">
+                ✨ Generated: Product image + description + pricing
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <div class="section-header">
+        <h2>Everything You Need</h2>
+        <p>Powerful features to scale your e-commerce business</p>
+      </div>
+      
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">🎨</div>
+          <h3>AI Image Generation</h3>
+          <p>Create stunning product images from text descriptions in seconds.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📝</div>
+          <h3>Smart Descriptions</h3>
+          <p>SEO-optimized product descriptions that convert visitors to buyers.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🏷️</div>
+          <h3>Auto-Tagging</h3>
+          <p>Automatic category and tag suggestions based on product attributes.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">📊</div>
+          <h3>Market Analysis</h3>
+          <p>Real-time pricing recommendations based on market trends.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">🌐</div>
+          <h3>Multi-Platform</h3>
+          <p>Export to Shopify, WooCommerce, Amazon, and more.</p>
+        </div>
+        
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Bulk Processing</h3>
+          <p>Generate hundreds of products at once with batch processing.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <div class="section-header">
+        <h2>Simple Pricing</h2>
+        <p>Start free, scale as you grow</p>
+      </div>
+      
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Starter</h3>
+          <div class="price">$0<span>/mo</span></div>
+          <ul>
+            <li>10 products/month</li>
+            <li>Basic images</li>
+            <li>Standard support</li>
+          </ul>
+          <a href="#" class="btn btn-secondary" style="width:100%">Get Started</a>
+        </div>
+        
+        <div class="pricing-card featured">
+          <h3>Pro</h3>
+          <div class="price">$29<span>/mo</span></div>
+          <ul>
+            <li>Unlimited products</li>
+            <li>AI image generation</li>
+            <li>Priority support</li>
+            <li>Export to all platforms</li>
+          </ul>
+          <a href="#" class="btn btn-primary" style="width:100%">Get Started</a>
+        </div>
+        
+        <div class="pricing-card">
+          <h3>Enterprise</h3>
+          <div class="price">$99<span>/mo</span></div>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>API access</li>
+            <li>Custom integrations</li>
+            <li>Dedicated manager</li>
+          </ul>
+          <a href="#" class="btn btn-secondary" style="width:100%">Contact Sales</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 Luminous. Built with AI.</p>
+    </footer>
+  </div>
+</body>
+</html>

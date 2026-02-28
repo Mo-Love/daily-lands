@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Колобок — Казка для дітей</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Unbounded:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #87CEEB;
+      --bg-dark: #4A90D9;
+      --sun: #FFD93D;
+      --grass: #4CAF50;
+      --grass-dark: #388E3C;
+      --kolobok: #FF6B35;
+      --text: #2c3e50;
+      --white: #ffffff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: linear-gradient(180deg, var(--bg) 0%, var(--grass) 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sky Effects */
+    .sky {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .cloud {
+      position: absolute;
+      background: var(--white);
+      border-radius: 50px;
+      opacity: 0.9;
+      animation: cloudFloat 20s linear infinite;
+    }
+
+    .cloud::before, .cloud::after {
+      content: '';
+      position: absolute;
+      background: var(--white);
+      border-radius: 50%;
+    }
+
+    .cloud-1 { width: 100px; height: 40px; top: 10%; left: -100px; animation-delay: 0s; }
+    .cloud-1::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+    .cloud-1::after { width: 35px; height: 35px; top: -15px; left: 50px; }
+
+    .cloud-2 { width: 80px; height: 30px; top: 20%; left: -80px; animation-delay: -7s; animation-duration: 25s; }
+    .cloud-2::before { width: 40px; height: 40px; top: -20px; left: 10px; }
+    .cloud-2::after { width: 25px; height: 25px; top: -10px; left: 40px; }
+
+    .cloud-3 { width: 120px; height: 45px; top: 5%; left: -120px; animation-delay: -14s; animation-duration: 30s; }
+    .cloud-3::before { width: 60px; height: 60px; top: -30px; left: 20px; }
+    .cloud-3::after { width: 40px; height: 40px; top: -18px; left: 65px; }
+
+    @keyframes cloudFloat {
+      from { transform: translateX(0); }
+      to { transform: translateX(calc(100vw + 200px)); }
+    }
+
+    .sun {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      background: var(--sun);
+      border-radius: 50%;
+      top: 20px;
+      right: 50px;
+      box-shadow: 0 0 60px var(--sun);
+      animation: sunPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes sunPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+    /* Main Container */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    /* Title */
+    .title {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .title h1 {
+      font-family: 'Unbounded', cursive;
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      color: var(--white);
+      text-shadow: 3px 3px 0 var(--kolobok);
+      animation: titleBounce 2s ease-in-out infinite;
+    }
+
+    @keyframes titleBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .title p {
+      color: var(--white);
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+
+    /* Story Card */
+    .story-card {
+      background: var(--white);
+      border-radius: 30px;
+      padding: 30px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      min-height: 300px;
+    }
+
+    .story-content {
+      text-align: center;
+    }
+
+    /* Kolobok Character */
+    .kolobok {
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle at 30% 30%, #FF8C5A, var(--kolobok), #CC4411);
+      border-radius: 50%;
+      margin: 0 auto 20px;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.5);
+      animation: kolobokBounce 1s ease-in-out infinite;
+    }
+
+    @keyframes kolobokBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-10px) rotate(-5deg); }
+      75% { transform: translateY(-10px) rotate(5deg); }
+    }
+
+    .kolobok .eyes {
+      position: absolute;
+      top: 40px;
+      left: 35px;
+      display: flex;
+      gap: 30px;
+    }
+
+    .kolobok .eye {
+      width: 20px;
+      height: 25px;
+      background: var(--text);
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .kolobok .eye::after {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: var(--white);
+      border-radius: 50%;
+      top: 4px;
+      left: 4px;
+    }
+
+    .kolobok .nose {
+      width: 25px;
+      height: 20px;
+      background: #CC4411;
+      border-radius: 50%;
+      position: absolute;
+      top: 70px;
+      left: 62px;
+    }
+
+    .kolobok .mouth {
+      width: 40px;
+      height: 20px;
+      border: 4px solid #CC4411;
+      border-top: none;
+      border-radius: 0 0 20px 20px;
+      position: absolute;
+      top: 90px;
+      left: 55px;
+    }
+
+    .kolobok .blush {
+      position: absolute;
+      width: 25px;
+      height: 15px;
+      background: #FFB6C1;
+      border-radius: 50%;
+      top: 80px;
+      opacity: 0.7;
+    }
+
+    .blush.left { left: 20px; }
+    .blush.right { right: 20px; }
+
+    /* Story Text */
+    .story-text {
+      font-size: 1.3rem;
+      line-height: 1.8;
+      color: var(--text);
+      margin: 20px 0;
+    }
+
+    /* Choices */
+    .choices {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+
+    .choice-btn {
+      padding: 15px 30px;
+      font-family: 'Comic Neue', cursive;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: var(--grass);
+      color: var(--white);
+      box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+    }
+
+    .choice-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(76, 175, 80, 0.6);
+    }
+
+    .choice-btn.orange { background: var(--kolobok); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.4); }
+    .choice-btn.orange:hover { box-shadow: 0 8px 20px rgba(255, 107, 53, 0.6); }
+
+    .choice-btn.blue { background: var(--bg-dark); box-shadow: 0 5px 15px rgba(74, 144, 217, 0.4); }
+    .choice-btn.blue:hover { box-shadow: 0 8px 20px rgba(74, 144, 217, 0.6); }
+
+    /* Characters */
+    .characters {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .character {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      animation: characterPop 0.5s ease-out backwards;
+    }
+
+    .character.bear { background: #8B4513; }
+    .character.rabbit { background: #FFB6C1; }
+    .character.fox { background: #FF6B35; }
+    .character.grandpa { background: #4a4a4a; }
+    .character.grandma { background: #DDA0DD; }
+
+    @keyframes characterPop {
+      0% { transform: scale(0); }
+      80% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+
+    /* Progress */
+    .progress {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .progress-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: all 0.3s;
+    }
+
+    .progress-dot.active {
+      background: var(--kolobok);
+      transform: scale(1.3);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: var(--white);
+      font-size: 1rem;
+    }
+
+    /* Audio Button */
+    .audio-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: none;
+      background: var(--kolobok);
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 5px 20px rgba(255, 107, 53, 0.5);
+      z-index: 100;
+      transition: transform 0.3s;
+    }
+
+    .audio-btn:hover {
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 600px) {
+      .container { padding: 15px; }
+      .story-card { padding: 20px; }
+      .kolobok { width: 100px; height: 100px; }
+      .kolobok .eyes { top: 25px; left: 20px; gap: 25px; }
+      .kolobok .eye { width: 15px; height: 18px; }
+      .kolobok .nose { top: 45px; left: 38px; width: 20px; height: 15px; }
+      .kolobok .mouth { top: 58px; left: 32px; width: 30px; }
+      .kolobok .blush { width: 18px; height: 10px; top: 52px; }
+      .blush.left { left: 10px; }
+      .blush.right { right: 10px; }
+      .story-text { font-size: 1.1rem; }
+      .choice-btn { padding: 12px 20px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sky">
+    <div class="cloud cloud-1"></div>
+    <div class="cloud cloud-2"></div>
+    <div class="cloud cloud-3"></div>
+    <div class="sun"></div>
+  </div>
+
+  <div class="container">
+    <div class="title">
+      <h1>🍞 Колобок</h1>
+      <p>Інтерактивна казка для дітей</p>
+    </div>
+
+    <div class="story-card">
+      <div class="story-content" id="story">
+        <div class="kolobok">
+          <div class="eyes">
+            <div class="eye"></div>
+            <div class="eye"></div>
+          </div>
+          <div class="nose"></div>
+          <div class="mouth"></div>
+          <div class="blush left"></div>
+          <div class="blush right"></div>
+        </div>
+        
+        <p class="story-text" id="storyText">
+          Жили собі дід та баба. І попросив дід: <br>
+          "Бабо, спекти мені Колобка!"<br><br>
+          Баба замісила тісто і спекла рум'яного Колобка!
+        </p>
+
+        <div class="choices" id="choices">
+          <button class="choice-btn" onclick="nextScene(1)">Почати казку ▶️</button>
+        </div>
+
+        <div class="progress" id="progress">
+          <div class="progress-dot active"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      👆 Натискай на кнопки, щоб обрати дію!
+    </div>
+  </div>
+
+  <button class="audio-btn" onclick="toggleAudio()" title="Увімкнути звук">🔊</button>
+
+  <script>
+    const scenes = [
+      {
+        text: "Жили собі дід та баба. І попросив дід: <br>\"Бабо, спекти мені Колобка!\"<br><br>Баба замісила тісто і спекла рум'яного Колобка!",
+        choices: [{text: "Почати казку ▶️", action: 1}]
+      },
+      {
+        text: "Колобок лежить на вікні, гріється на сонечку.<br><br>Раптом він почув голос:<br>\"Колобок, Колобок, я тебе з'їм!\"",
+        characters: [
+          {emoji: "🐻", class: "bear"},
+          {emoji: "🐰", class: "rabbit"},
+          {emoji: "🦊", class: "fox"}
+        ],
+        choices: [
+          {text: "Хто це?", class: "orange", action: 2},
+          {text: "Втекти від Лісового звіра 🏃", class: "blue", action: 3}
+        ]
+      },
+      {
+        text: "\"Я — Лисичка!\" — сказала Лисичка.<br>\"А ти такий рум'яний, такий смачний!\"<br><br>Але Колобок хитренький!",
+        characters: [{emoji: "🦊", class: "fox"}],
+        choices: [
+          {text: "Заспівати пісеньку 🎵", class: "orange", action: 4},
+          {text: "Покотитися далі 🏃", class: "blue", action: 5}
+        ]
+      },
+      {
+        text: "Колобок покотився з гірки!<br><br>Та зустрів Зайчика:<br>\"Колобок, Колобок, куди ти котишся?\"",
+        characters: [{emoji: "🐰", class: "rabbit"}],
+        choices: [
+          {text: "До річки! 🌊", class: "orange", action: 5},
+          {text: "В ліс! 🌲", class: "blue", action: 5}
+        ]
+      },
+      {
+        text: "Колобок заспівав свою знамениту пісню:<br><br><strong>\"Я — Колобок, Колобок!<br>Я по лісу йду!<br>Нікому мене не з'їсти,<br>Я самаходний їду!\"</strong>",
+        choices: [
+          {text: "Лисичка теж заспівала 🎵", class: "orange", action: 6},
+          {text: "Котився далі! 🏃", class: "blue", action: 7}
+        ]
+      },
+      {
+        text: "Лисичка заслухалась і забула, що хотіла з'їсти Колобка!<br><br>\"Яка гарна пісня! — сказала вона. —<br>Давай разом танцювати!\"",
+        characters: [{emoji: "🦊", class: "fox"}],
+        choices: [
+          {text: "Танцювати! 💃", class: "orange", action: 8},
+          {text: "До річки! 🌊", class: "blue", action: 7}
+        ]
+      },
+      {
+        text: "Колобок покотився до річки!<br><br>Там сиділа Зайчиха з дітками:<br>\"Ой, який гарний Колобок!\"",
+        characters: [
+          {emoji: "🐰", class: "rabbit"},
+          {emoji: "🐰", class: "rabbit"},
+          {emoji: "🐰", class: "rabbit"}
+        ],
+        choices: [
+          {text: "Пограти з зайчатами! 🎮", class: "orange", action: 9},
+          {text: "Плисти через річку! 🌊", class: "blue", action: 7}
+        ]
+      },
+      {
+        text: "🎉 КІНЕЦЬ! 🎉<br><br>Колобок знайшов багато друзів!<br>Всі звірята його полюбили!<br><br>Можеш почати знову?",
+        choices: [
+          {text: "Почати знову 🔄", class: "orange", action: 0}
+        ]
+      },
+      {
+        text: "Зайчата дуже зраділи!<br>Вони грались, стрибали,<br>сміялись та веселились!<br><br>Колобок знайшов справжніх друзів!",
+        characters: [
+          {emoji: "🐰", class: "rabbit"},
+          {emoji: "🐰", class: "rabbit"},
+          {emoji: "🐰", class: "rabbit"},
+          {emoji: "🍞", class: ""}
+        ],
+        choices: [
+          {text: "Ще раз! 🌟", class: "orange", action: 0}
+        ]
+      }
+    ];
+
+    let currentScene = 0;
+
+    function nextScene(sceneIndex) {
+      currentScene = sceneIndex;
+      const scene = scenes[sceneIndex];
+      
+      // Update text
+      document.getElementById('storyText').innerHTML = scene.text;
+      
+      // Update characters
+      const charsContainer = document.querySelector('.characters');
+      if (scene.characters) {
+        let charsHTML = '<div class="characters">';
+        scene.characters.forEach((char, i) => {
+          charsHTML += `<div class="character ${char.class}" style="animation-delay: ${i * 0.1}s">${char.emoji}</div>`;
+        });
+        charsHTML += '</div>';
+        
+        // Insert after text
+        const textEl = document.getElementById('storyText');
+        let charsEl = textEl.nextElementSibling;
+        if (!charsEl || !charsEl.classList.contains('characters')) {
+          textEl.insertAdjacentHTML('afterend', charsHTML);
+        }
+      }
+      
+      // Update choices
+      const choicesContainer = document.getElementById('choices');
+      let choicesHTML = '';
+      scene.choices.forEach(choice => {
+        const btnClass = choice.class || '';
+        choicesHTML += `<button class="choice-btn ${btnClass}" onclick="nextScene(${choice.action})">${choice.text}</button>`;
+      });
+      choicesContainer.innerHTML = choicesHTML;
+      
+      // Update progress
+      const dots = document.querySelectorAll('.progress-dot');
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === sceneIndex);
+      });
+      
+      // Animate kolobok
+      const kolobok = document.querySelector('.kolobok');
+      kolobok.style.animation = 'none';
+      setTimeout(() => {
+        kolobok.style.animation = 'kolobokBounce 1s ease-in-out infinite';
+      }, 10);
+    }
+
+    function toggleAudio() {
+      alert("🔊 Аудіо скоро буде! Музика та звукові ефекти!");
+    }
+  </script>
+</body>
+</html>
