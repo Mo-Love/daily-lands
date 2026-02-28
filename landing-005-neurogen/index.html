@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NeuroGen — AI Генератор Контенту</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #050507;
+      --bg-card: #0f0f12;
+      --primary: #8b5cf6;
+      --primary-glow: #a78bfa;
+      --accent: #06ffa5;
+      --text: #ffffff;
+      --text-muted: #71717a;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Background */
+    .bg-effects {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .bg-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.4;
+      animation: float 10s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 500px;
+      height: 500px;
+      background: var(--primary);
+      top: -150px;
+      left: -100px;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent);
+      bottom: -100px;
+      right: -50px;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(30px, 20px); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      padding: 24px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+    }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 120px 0 80px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 100px;
+      font-size: 13px;
+      color: var(--primary-glow);
+      margin-bottom: 32px;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(40px, 8vw, 72px);
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+
+    h1 span {
+      background: linear-gradient(135deg, var(--primary-glow), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 40px;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 32px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-glow));
+      color: white;
+      box-shadow: 0 4px 24px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(139, 92, 246, 0.5);
+    }
+
+    .btn-secondary {
+      background: var(--bg-card);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Features */
+    .features {
+      padding: 80px 0;
+    }
+
+    .features h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 32px;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .feature-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* Demo */
+    .demo {
+      padding: 80px 0;
+    }
+
+    .demo-window {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .demo-header {
+      padding: 16px 20px;
+      background: rgba(255,255,255,0.03);
+      display: flex;
+      gap: 8px;
+    }
+
+    .demo-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .demo-dot:nth-child(1) { background: #ff5f57; }
+    .demo-dot:nth-child(2) { background: #febc2e; }
+    .demo-dot:nth-child(3) { background: #28c840; }
+
+    .demo-content {
+      padding: 40px;
+    }
+
+    .prompt-box {
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .response-box {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(6, 255, 165, 0.1));
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+    }
+
+    .typing-text {
+      overflow: hidden;
+      border-right: 2px solid var(--accent);
+      white-space: pre-wrap;
+      animation: typing 3s steps(40) infinite;
+    }
+
+    @keyframes typing {
+      from { max-width: 0; }
+      to { max-width: 100%; }
+    }
+
+    /* Pricing */
+    .pricing {
+      padding: 80px 0;
+    }
+
+    .pricing h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 36px;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .pricing-card.featured {
+      border-color: var(--primary);
+      position: relative;
+    }
+
+    .pricing-card.featured::before {
+      content: 'Популярний';
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--primary);
+      padding: 4px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .pricing-card h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .price span {
+      font-size: 16px;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .pricing-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+
+    .pricing-features li {
+      padding: 8px 0;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .pricing-features li::before {
+      content: '✓';
+      color: var(--accent);
+    }
+
+    /* Footer */
+    footer {
+      padding: 48px 0;
+      text-align: center;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 80px;
+    }
+
+    /* Mobile */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hero { padding: 80px 0 60px; }
+      h1 { font-size: 36px; }
+      .pricing-card.featured::before { font-size: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-effects">
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+  </div>
+
+  <div class="container">
+    <header>
+      <div class="logo">NeuroGen</div>
+      <ul class="nav-links">
+        <li><a href="#features">Можливості</a></li>
+        <li><a href="#demo">Демо</a></li>
+        <li><a href="#pricing">Ціни</a></li>
+      </ul>
+    </header>
+
+    <section class="hero">
+      <div class="badge">AI нового покоління</div>
+      <h1>Створюй контент<br><span>за секунди</span></h1>
+      <p>NeuroGen — AI-асистент, який генерує тексти, ідеї та концепції для бізнесу. Безкоштовно спробуй уже зараз.</p>
+      <div class="cta-group">
+        <a href="#pricing" class="btn btn-primary">Почати безкоштовно</a>
+        <a href="#demo" class="btn btn-secondary">Дивитися демо</a>
+      </div>
+    </section>
+
+    <section class="features" id="features">
+      <h2>Можливості</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">✍️</div>
+          <h3>Генерація текстів</h3>
+          <p>Створюй статті, пости, описи товарів — будь-який контент за лічені секунди</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💡</div>
+          <h3>Ідеї та концепції</h3>
+          <p>Отримуй креативні ідеї для маркетингу, продукту та бізнесу</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <h3>Персоналізація</h3>
+          <p>AI адаптується до твого стилю та голосу бренду</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="demo" id="demo">
+      <div class="demo-window">
+        <div class="demo-header">
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+          <div class="demo-dot"></div>
+        </div>
+        <div class="demo-content">
+          <div class="prompt-box">Напиши пост для Instagram про запуск нового продукту</div>
+          <div class="response-box">
+            <p>🚀 <strong>Вуаля! Твій продукт — готовий до запуску!</strong></p>
+            <br>
+            <p>Представляємо тобі [Назва продукту] — рішення, яке змінить твоє уявлення про...</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing" id="pricing">
+      <h2>Прості тарифи</h2>
+      <div class="pricing-grid">
+        <div class="pricing-card">
+          <h3>Старт</h3>
+          <div class="price">$0<span>/місяць</span></div>
+          <ul class="pricing-features">
+            <li>50 генерацій на місяць</li>
+            <li>Базові шаблони</li>
+            <li>Підтримка email</li>
+          </ul>
+          <a href="#" class="btn btn-secondary">Почати</a>
+        </div>
+        <div class="pricing-card featured">
+          <h3>Профі</h3>
+          <div class="price">$19<span>/місяць</span></div>
+          <ul class="pricing-features">
+            <li>Безліміт генерацій</li>
+            <li>Персоналізація стилю</li>
+            <li>Пріоритетна підтримка</li>
+            <li>API доступ</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Почати</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>© 2026 NeuroGen. AI, що працює для тебе.</p>
+    </footer>
+  </div>
+</body>
+</html>
